@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gordonklaus/portaudio"
 	"math"
+	"os"
 	"time"
 )
 
@@ -52,7 +54,7 @@ func playTone(char rune) {
 	s := newDtmf(toneA, toneB, sampleRate)
 	defer s.Close()
 	chk(s.Start())
-	time.Sleep(120 * time.Millisecond)
+	time.Sleep(200 * time.Millisecond)
 	chk(s.Stop())
 	time.Sleep(40 * time.Millisecond)
 }
@@ -64,8 +66,11 @@ func dial(nr string) {
 }
 
 func main() {
-	dial("0123456789")
-	//dial("015154644245")
+	if len(os.Args) < 2 {
+		fmt.Fprintf(os.Stderr, "usage: %s [number]\n", os.Args[0])
+		os.Exit(2)
+	}
+	dial(os.Args[1])
 }
 
 type dtmfSine struct {
